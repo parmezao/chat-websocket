@@ -22,6 +22,11 @@ let messages = [];
 io.on('connection', socket => {
     console.log(`Socket conectado: ${socket.id}`);
 
+    socket.on('clearMessages', data => {
+        messages.splice(0, messages.length);
+        socket.emit('clearedMessages', data);
+    });
+
     socket.emit('previousMessage', messages);
 
     socket.on('sendMessage', data => {

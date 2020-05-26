@@ -12,9 +12,13 @@
     </head>
     <body>
         <form id="chat">
-            <input type="text" name="username" placeholder="Digite seu usuário">
+            <div class="headerlinks">
+                <a id="clearmessage" href="#">Limpar Conversas</a> | 
+                <a id="logout" href="#">Desconectar</a>                
+            </div>
+            <input id="username" type="text" name="username" placeholder="Digite seu usuário">
             <div class="messages"></div>
-            <input type="text" name="message" placeholder="Digite sua mensagem">
+            <input id="message" type="text" name="message" placeholder="Digite sua mensagem">
             <button type="submit">Enviar</button>
         </form>
 
@@ -24,7 +28,23 @@
 
             function renderMessage(message) {
                 $('.messages').append(`<div class="message"><strong>${message.author}</strong>: ${message.message}</div>`);
-            }
+                $('#message').val('');
+            };
+
+            function renderClearMessages() {
+                $('.messages').empty();
+            };
+
+            function Login() {
+                if (!$('#username').prop('disabled')) {
+                    $('#username').prop('disabled', true);                                                            
+                }
+            };
+
+            function Logout() {
+                $('#username').prop('disabled', false); 
+                $('#username').val('');                                                           
+            };
 
             socket.on('previousMessage', function(messages) {
                 messages.forEach(message => {
@@ -34,7 +54,21 @@
 
             socket.on('receivedMessage', function(message) {
                 renderMessage(message);
-            }) ;  
+            });  
+
+            socket.on('clearedMessages', function() {
+                renderClearMessages();
+            })
+
+            $("#clearmessage").click(function(event) {   
+                event.preventDefault();
+                socket.emit('clearMessages');                
+            });            
+
+            $("#logout").click(function(event) {   
+                event.preventDefault();                                
+                Logout();               
+            });                   
 
             $('#chat').submit(function(event) {
                 event.preventDefault();
@@ -49,8 +83,10 @@
                     };
 
                     renderMessage(messageObject);
-                    socket.emit('sendMessage', messageObject)
-                }                
+                    socket.emit('sendMessage', messageObject);
+
+                    Login();
+                }                               
             })
         </script>
     </body>

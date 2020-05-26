@@ -43,3 +43,18 @@ html, body {
     border: 1px solid #ddd;
     padding: 20px;
   }
+
+  .headerlinks {
+		display: inline-block;
+		text-align: right;	
+    width: 600px;
+    height: 1px;
+    margin: 0px 0;
+		padding: 15px;	
+		font-size: small;			
+	}
+	
+	a:link {text-decoration: none;color: #6f6f83}
+	a:active {text-decoration: none;}
+	a:visited {text-decoration: none;color: #6f6f83}
+	a:hover {text-decoration: underline;color: #6f6f83}	
